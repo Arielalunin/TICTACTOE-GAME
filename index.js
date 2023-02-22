@@ -98,3 +98,7 @@ function IsFinished(){
   if((mainDiagFlag==3) || (secDiagFlag==3)){return true;}
   return false;
 }
+
+router.get('/NewGame',function(req,res) {
+  NewGame();
+});
