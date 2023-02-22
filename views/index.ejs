@@ -9,13 +9,17 @@
     body{background-color: lightskyblue;}
     .p1{background-color: brown;}
     .p2{background-color: chartreuse;}
+    /* .start{background-color: lightskyblue;} */
     td{width:30px;height: 30px;border: 1px solid black;}
     #end{width: 100%; height: 200px;background-color: red;color: white;display: none;}
     </style>
 </head>
 <body>
 <h1>player <%= player %> </h1>
-<div id="end">Game Finished</div>
+<div id="end">
+    <div>Game Finished</div>
+    <button id="restartBTN">restart Game</button>
+</div>
 <table id="brd">
 <tr>
     <td id="c1" onclick="sendMove(1)"></td>
@@ -41,6 +45,16 @@ function setP1(num){
 function setP2(num){
     document.getElementById("c"+num).classList.add("p2");
 }
+
+function setStart1(num){
+    document.getElementById("c"+num).classList.remove("p1");
+    document.getElementById("c"+num).classList.remove("p2");
+}
+
+function setStart2(num){
+}
+
+
 function updateData(data){
     console.log(data);
     if(data.GameStatus=="on"){
@@ -52,6 +66,17 @@ function updateData(data){
     }
     else if(data.GameStatus=="over"){
         GameOver();
+    }
+
+    else if(data.GameStatus=="WaitToStart"){
+        for (let i=1; i<=9; i++){
+            setStart1(i);
+        }
+        // if(data.player==1){
+        //     setStart1(data.cell);
+        // } else {
+        //     setStart2(data.cell);
+        // }
     }
 }
 function GameOver(){
@@ -69,6 +94,20 @@ async function fetchText() {
     updateData(data);
 }
 setInterval(fetchText,500);
+
+var restartBTN = document.getElementById("restartBTN");
+restartBTN.onclick = function(event) {
+    console.log("restart begin");
+    restartfun();
+    document.getElementById("brd").style.display="block";
+    document.getElementById("end").style.display="none";
+}
+
+async function restartfun() {
+    let response = await fetch('/NewGame');
+    let data = await response.json();
+    updateData(data);
+}
 </script>
 </body>
 </html>
